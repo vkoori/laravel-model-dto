@@ -1,6 +1,6 @@
 <?php
 
-namespace Daria\JWT;
+namespace Vkoori\EntityDto;
 
 use Illuminate\Support\ServiceProvider;
 use Vkoori\EntityDto\Commands\MakeDtoCommand;

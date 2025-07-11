@@ -11,7 +11,9 @@ composer require vkoori/laravel-model-dto
 
 ### Configuration
 
-Create `config/dto.php` to define which DTOs should be generated:
+1. Add `\Vkoori\EntityDto\EntityDtoProvider` to Providers list.
+
+2. Create `config/dto.php` to define which DTOs should be generated:
 
 ```php
 return [
