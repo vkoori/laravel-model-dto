@@ -2,6 +2,7 @@
 
 namespace Vkoori\EntityDto\Traits;
 
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 
 trait AutoFillableAndCasts
@@ -34,6 +35,10 @@ trait AutoFillableAndCasts
                     $type = Arr::get($field, 'type');
                     $type = ltrim($type, '?');
 
+                    if (is_a($type, Carbon::class, true)) {
+                        return [$key => 'datetime'];
+                    }
+
                     if (class_exists($type)) {
                         $type = str_starts_with($type, '\\') ? $type : '\\' . $type;
                         return [$key => $type];
@@ -44,15 +49,22 @@ trait AutoFillableAndCasts
                         'bool' => [$key => 'boolean'],
                         'float' => [$key => 'float'],
                         'array' => [$key => 'array'],
-                        '\Carbon\Carbon' => [$key => 'datetime'],
                         default => [],
                     };
                 })
                 ->toArray();
 
             $this->mergeCasts($casts);
+
+            $this->castLoaded = true;
         }
 
         return parent::getCasts();
+    }
+
+    protected function getDtoConfig(): array
+    {
+        $modelName = class_basename($this);
+        return config("dto.{$modelName}", []);
     }
 }

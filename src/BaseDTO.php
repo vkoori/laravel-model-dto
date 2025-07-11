@@ -32,9 +32,9 @@ abstract class BaseDTO
         $dto = new static();
 
         foreach ($model->getAttributes() as $key => $value) {
-            $setter = 'set' . ucfirst($key);
+            $setter = 'set' . ucfirst(Str::camel($key));
             if (method_exists($dto, $setter)) {
-                $dto->{$setter}($value);
+                $dto->{$setter}($model->{$key});
             }
         }
 
