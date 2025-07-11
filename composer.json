@@ -1,0 +1,27 @@
+{
+    "name": "vkoori/laravel-model-dto",
+    "description": "generate entity dto like dotrine",
+    "keywords": [
+        "Laravel",
+        "Dto",
+        "Eloquent"
+    ],
+    "authors": [
+        {
+            "name": "Koorosh SafeAshrafi",
+            "email": "kooroshsafeashrafi@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
+        "illuminate/console": "^8.0|^9.0|^10.0|^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vkoori\\EntityDto\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
