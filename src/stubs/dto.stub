@@ -5,8 +5,5 @@ namespace DummyNamespace;
 use Vkoori\EntityDto\BaseDTO;
 
 class DummyClass extends BaseDTO
-{
-    @fields
-
-    @methods
+{@fields@methods
 }

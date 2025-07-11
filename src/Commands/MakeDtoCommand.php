@@ -35,22 +35,37 @@ class MakeDtoCommand extends Command
             $path = "Modules/{$moduleName}/app/Models";
         }
 
+        $file = "{$path}/{$dtoClass}.php";
+
         $fields = '';
         $methods = '';
 
         foreach ($dtoConfig as $column => $type) {
+            $types = explode('|', $type);
+            foreach ($types as &$value) {
+                $nullable = str_starts_with($value, '?');
+                $value = ltrim($value, '?');
+                if (!str_starts_with($value, '\\') && class_exists($value)) {
+                    $value = '\\' . $value;
+                }
+                if ($nullable) {
+                    $value = '?' . $value;
+                }
+            }
+            $type = implode('|', $types);
+
             $camel = Str::camel($column);
             $ucfirst = ucfirst($camel);
 
             // Field
-            $fields .= "private {$type} \${$camel};\n    ";
+            $fields .= "\n    private {$type} \${$camel};";
 
             // Setter
             $setter = "set{$ucfirst}";
             $getter = "get{$ucfirst}";
 
             // Method: setter
-            $methods .= "
+            $methods .= "\n
     public function {$setter}({$type} \${$camel}): static
     {
         \$this->{$camel} = \${$camel};
@@ -64,7 +79,7 @@ class MakeDtoCommand extends Command
     public function {$getter}(): {$type}
     {
         return \$this->{$camel};
-    }\n";
+    }";
         }
 
         $stub = str_replace(['DummyNamespace', 'DummyClass', '@fields', '@methods'], [
@@ -74,15 +89,19 @@ class MakeDtoCommand extends Command
             $methods
         ], $stub);
 
-        if (File::exists($path)) {
-            $this->warn("DTO already exists at: {$path}");
+        if (!file_exists($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+
+        if (File::exists($file)) {
+            $this->warn("DTO already exists at: {$file}");
             if (!$this->confirm('Do you want to overwrite?')) {
                 return;
             }
         }
 
-        File::put($path, $stub);
+        File::put($file, $stub);
 
-        $this->info("DTO created successfully: {$dtoClass}");
+        $this->info("DTO created successfully: {$dtoClass} [{$file}]");
     }
 }
