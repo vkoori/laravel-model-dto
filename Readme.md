@@ -18,11 +18,36 @@ composer require vkoori/laravel-model-dto
 ```php
 return [
     'User' => [
-        'id' => 'int',
-        'name' => 'string',
-        'email' => '?string',
-        'is_active' => 'bool',
-        'deleted_at' => '?\Carbon\Carbon',
+        'id' => [
+            'type' => 'int',
+            'fillable' => false,
+            'cast' => false,
+        ],
+        'name' => [
+            'type' => 'string',
+            'fillable' => true,
+            'cast' => false,
+        ],
+        'email' => [
+            'type' => '?string',
+            'fillable' => true,
+            'cast' => false,
+        ],
+        'status' => [
+            'type' => '\App\Enums\StatusEnum',
+            'fillable' => true,
+            'cast' => true,
+        ],
+        'is_active' => [
+            'type' => 'bool',
+            'fillable' => true,
+            'cast' => false,
+        ],
+        'deleted_at' => [
+            'type' => '?\Carbon\Carbon',
+            'fillable' => false,
+            'cast' => false,
+        ],
     ],
     // Add more entities as needed
 ];
@@ -32,10 +57,22 @@ return [
 
 ### Usage
 
-Generate a DTO using Artisan:
+1. Generate a DTO using Artisan:
 
 ```bash
 php artisan make:dto User --module=Users
+```
+
+2. Use the Trait in Your Model to automatically setup $fillable and $casts properties
+
+```php
+use Illuminate\Database\Eloquent\Model;
+use Vkoori\EntityDto\Traits\AutoFillableAndCasts;
+
+class User extends Model
+{
+    use AutoFillableAndCasts;
+}
 ```
 
 ---

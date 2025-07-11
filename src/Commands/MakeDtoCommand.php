@@ -40,7 +40,8 @@ class MakeDtoCommand extends Command
         $fields = '';
         $methods = '';
 
-        foreach ($dtoConfig as $column => $type) {
+        foreach ($dtoConfig as $column => $columnInfo) {
+            $type = $columnInfo['type'];
             $types = explode('|', $type);
             foreach ($types as &$value) {
                 $nullable = str_starts_with($value, '?');
